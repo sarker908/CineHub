@@ -704,15 +704,49 @@ function setupListeners() {
         searchButton.click();
         $('main-nav').classList.remove('search-open');
     };
+    const globalSearchSuggestions = $('global-search-suggestions');
+    let globalSearchTimer;
+    const getGlobalSearchContext = () => tvSection.classList.contains('active')
+        ? { section: 'tv', input: tvSearch, typeSelect: tvSearchType }
+        : { section: 'movie', input: movieSearch, typeSelect: movieSearchType };
+
     globalSearchToggle?.addEventListener('click', () => {
         const nav = $('main-nav');
         nav.classList.toggle('search-open');
         if (nav.classList.contains('search-open')) globalSearchInput.focus();
+        else globalSearchSuggestions.style.display = 'none';
+    });
+    globalSearchInput?.addEventListener('input', () => {
+        const q = globalSearchInput.value.trim();
+        clearTimeout(globalSearchTimer);
+        if (q.length < 2) {
+            globalSearchSuggestions.style.display = 'none';
+            globalSearchSuggestions.innerHTML = '';
+            return;
+        }
+        const context = getGlobalSearchContext();
+        globalSearchTimer = setTimeout(() => {
+            fetchSuggestions(q, context.typeSelect.value, context.section, globalSearchInput, globalSearchSuggestions);
+        }, 300);
     });
     globalSearchSubmit?.addEventListener('click', runGlobalSearch);
     globalSearchInput?.addEventListener('keydown', e => {
-        if (e.key === 'Enter') runGlobalSearch();
-        if (e.key === 'Escape') $('main-nav').classList.remove('search-open');
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            runGlobalSearch();
+        }
+        if (e.key === 'Escape') {
+            $('main-nav').classList.remove('search-open');
+            globalSearchSuggestions.style.display = 'none';
+        }
+    });
+    globalSearchInput?.addEventListener('focus', () => {
+        if (globalSearchInput.value.trim().length >= 2 && globalSearchSuggestions.children.length) {
+            globalSearchSuggestions.style.display = 'block';
+        }
+    });
+    document.addEventListener('click', e => {
+        if (!e.target.closest('#global-search-box')) globalSearchSuggestions.style.display = 'none';
     });
     setupSearch(tvSearch, tvSearchBtn, tvSuggEl, tvSearchType, 'tv');
 
@@ -921,8 +955,9 @@ function hideBackBtn(section) {
     if (btn) btn.remove();
 }
 
-async function fetchSuggestions(q, type, section) {
-    const suggEl = section === 'movie' ? movieSuggEl : tvSuggEl;
+async function fetchSuggestions(q, type, section, targetInput = null, targetSuggestions = null) {
+    const suggEl = targetSuggestions || (section === 'movie' ? movieSuggEl : tvSuggEl);
+    const inputEl = targetInput || (section === 'movie' ? movieSearch : tvSearch);
     try {
         let endpoint = type === 'actor' ? 'search/person' : type === 'movie' ? 'search/movie' : 'search/tv';
         const d = await api(endpoint, { query: q });
@@ -942,8 +977,10 @@ async function fetchSuggestions(q, type, section) {
 
         suggEl.querySelectorAll('.suggestion-item').forEach(el => {
             el.addEventListener('click', () => {
-                const input = section === 'movie' ? movieSearch : tvSearch;
-                input.value = el.dataset.name;
+                inputEl.value = el.dataset.name;
+                if (inputEl !== (section === 'movie' ? movieSearch : tvSearch)) {
+                    (section === 'movie' ? movieSearch : tvSearch).value = el.dataset.name;
+                }
                 suggEl.style.display = 'none';
                 if (el.dataset.type === 'actor') searchByActor(el.dataset.name, section);
                 else runSearch(section);
