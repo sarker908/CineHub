@@ -4,14 +4,20 @@ const $=id=>document.getElementById(id);
 const lk=document.createElement('link');lk.rel='stylesheet';
 lk.href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&display=swap';document.head.appendChild(lk);
 const st=document.createElement('style');st.textContent=`
-.nav-search{position:relative}
-.global-search-box{overflow:visible!important}
-.global-search-suggestions,.suggestions-dropdown{z-index:80;max-height:min(60vh,420px);overflow-y:auto;background:#141418;border:1px solid #26262d;border-radius:6px;box-shadow:0 16px 40px #000c}
-.suggestion-item.kb,.suggestion-item:hover{background:#ffffff14}
+#main-nav{z-index:1500}
+#dynamic-header{padding:var(--nav-h) 0 105px;min-height:590px}
+#dynamic-header::after{display:none}
+#dynamic-header>.header-bg{position:absolute;z-index:0}
+#dynamic-header>.header-vignette{position:absolute;z-index:1}
+#dynamic-header>.header-grain{position:absolute;z-index:2}
+#dynamic-header>.header-scroll-hint{position:absolute;z-index:3}
+#dynamic-header>.header-content{z-index:3}
+.p-ctrl{z-index:4}
+.global-search-box{overflow:visible!important;height:auto!important;background:transparent!important;border:0!important}
+.global-search-suggestions{z-index:1300}
+.suggestion-item.kb{background:#292930}
 .search-clear{cursor:pointer}
-#movie-grid,#tv-grid{scroll-margin-top:90px}
-#dynamic-header::after{opacity:.5}
-@media(max-width:700px){.global-search-box{max-width:calc(100vw - 24px)}}`;
+#movie-grid,#tv-grid{scroll-margin-top:90px}`;
 document.head.appendChild(st);
 
 // Hero: load once (premium.js re-ran it every 12s and reset the slide) + wire the buttons
