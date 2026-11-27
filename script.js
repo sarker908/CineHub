@@ -691,62 +691,12 @@ function setupListeners() {
     // Search
     setupSearch(movieSearch, movieSearchBtn, movieSuggEl, movieSearchType, 'movie');
     const globalSearchToggle = $('global-search-toggle');
-    const globalSearchInput = $('global-search-input');
-    const globalSearchSubmit = $('global-search-submit');
-    const runGlobalSearch = () => {
+    globalSearchToggle?.addEventListener('click', () => {
         const onTV = tvSection.classList.contains('active');
         const target = onTV ? tvSearch : movieSearch;
-        const typeSelect = onTV ? tvSearchType : movieSearchType;
-        const searchButton = onTV ? tvSearchBtn : movieSearchBtn;
-        if (!globalSearchInput.value.trim()) return;
-        typeSelect.value = onTV ? 'tv' : 'movie';
-        target.value = globalSearchInput.value.trim();
-        searchButton.click();
-        $('main-nav').classList.remove('search-open');
-    };
-    const globalSearchSuggestions = $('global-search-suggestions');
-    let globalSearchTimer;
-    const getGlobalSearchContext = () => tvSection.classList.contains('active')
-        ? { section: 'tv', input: tvSearch, typeSelect: tvSearchType }
-        : { section: 'movie', input: movieSearch, typeSelect: movieSearchType };
-
-    globalSearchToggle?.addEventListener('click', () => {
-        const nav = $('main-nav');
-        nav.classList.toggle('search-open');
-        if (nav.classList.contains('search-open')) globalSearchInput.focus();
-        else globalSearchSuggestions.style.display = 'none';
-    });
-    globalSearchInput?.addEventListener('input', () => {
-        const q = globalSearchInput.value.trim();
-        clearTimeout(globalSearchTimer);
-        if (q.length < 2) {
-            globalSearchSuggestions.style.display = 'none';
-            globalSearchSuggestions.innerHTML = '';
-            return;
-        }
-        const context = getGlobalSearchContext();
-        globalSearchTimer = setTimeout(() => {
-            fetchSuggestions(q, context.typeSelect.value, context.section, globalSearchInput, globalSearchSuggestions);
-        }, 300);
-    });
-    globalSearchSubmit?.addEventListener('click', runGlobalSearch);
-    globalSearchInput?.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            runGlobalSearch();
-        }
-        if (e.key === 'Escape') {
-            $('main-nav').classList.remove('search-open');
-            globalSearchSuggestions.style.display = 'none';
-        }
-    });
-    globalSearchInput?.addEventListener('focus', () => {
-        if (globalSearchInput.value.trim().length >= 2 && globalSearchSuggestions.children.length) {
-            globalSearchSuggestions.style.display = 'block';
-        }
-    });
-    document.addEventListener('click', e => {
-        if (!e.target.closest('#global-search-box')) globalSearchSuggestions.style.display = 'none';
+        const filters = target.closest('.filters-bar');
+        if (filters) filters.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => target.focus(), 250);
     });
     setupSearch(tvSearch, tvSearchBtn, tvSuggEl, tvSearchType, 'tv');
 
