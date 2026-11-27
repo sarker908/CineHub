@@ -222,7 +222,7 @@ async function init() {
     populateYears();
     setupListeners();
     await Promise.all([
-        loadTrendingHeader(),
+        (window.loadTrendingHeader || loadTrendingHeader)(),
         fetchGenres('movie', movieGenre),
         fetchGenres('tv', tvGenre),
     ]);
@@ -242,7 +242,8 @@ async function init() {
         fetchTVShows(currentTvEndpoint);
     }
     loadRecommendations();
-    setInterval(loadTrendingHeader, 12000);
+    // Use the premium hero loader when premium.js is present.
+    setInterval(() => (window.loadTrendingHeader || loadTrendingHeader)(), 12000);
 }
 
 // ── TRENDING HEADER ───────────────────────────────────
