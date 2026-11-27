@@ -3426,3 +3426,25 @@ footer { background:#090909; border-top:1px solid #222; }
  .section-header { display:block; }
  .telegram-join-btn { display:none; }
 }
+
+
+/* Global autocomplete dropdown */
+.global-search-box { position:relative; overflow:visible; }
+.global-suggestions {
+  display:none; position:absolute; top:calc(100% + 9px); right:0; left:auto;
+  width:min(360px,80vw); max-height:420px; overflow-y:auto; z-index:3000;
+  padding:7px; background:#171717; border:1px solid #3b3b3b; border-radius:4px;
+  box-shadow:0 16px 40px rgba(0,0,0,.7);
+}
+.global-suggestions .suggestion-item {
+  display:flex; align-items:center; gap:12px; min-height:48px; padding:9px 11px;
+  color:#eee; border-radius:3px; cursor:pointer; transition:background .15s ease;
+}
+.global-suggestions .suggestion-item:hover,
+.global-suggestions .suggestion-item:focus { background:#303030; }
+.global-suggestions .suggestion-item > i { width:18px; color:#e50914; }
+.global-suggestions .suggestion-name { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.global-suggestions .suggestion-year { color:#999; font-size:12px; white-space:nowrap; }
+@media(max-width:768px) {
+  .global-suggestions { position:fixed; top:62px; right:12px; width:min(360px,calc(100vw - 24px)); }
+}
