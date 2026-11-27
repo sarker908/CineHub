@@ -582,12 +582,56 @@ function setupListeners() {
     setupSearch(tvSearch, tvSearchBtn, tvSuggEl, tvSearchType, 'tv');
 
     const globalSearchToggle = $('global-search-toggle');
-    globalSearchToggle?.addEventListener('click', () => {
+    const globalSearchBox = $('global-search-box');
+    const globalSearchInput = $('global-search-input');
+    const globalSearchSubmit = $('global-search-submit');
+    const globalSearchSuggestions = $('global-search-suggestions');
+    let globalSearchTimer = null;
+
+    function submitGlobalSearch() {
         const onTV = tvSection.classList.contains('active');
+        const section = onTV ? 'tv' : 'movie';
         const target = onTV ? tvSearch : movieSearch;
-        const filters = target.closest('.filters-bar');
-        if (filters) filters.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        setTimeout(() => target.focus(), 250);
+        const value = globalSearchInput.value.trim();
+        if (value.length < 2) {
+            notify('Enter at least 2 characters', 'warning');
+            globalSearchInput.focus();
+            return;
+        }
+        target.value = value;
+        (onTV ? tvSearchType : movieSearchType).value = onTV ? 'tv' : 'movie';
+        globalSearchSuggestions.style.display = 'none';
+        $('main-nav').classList.remove('search-open');
+        globalSearchToggle.setAttribute('aria-expanded', 'false');
+        runSearch(section);
+    }
+
+    globalSearchToggle?.addEventListener('click', () => {
+        const nav = $('main-nav');
+        const opening = !nav.classList.contains('search-open');
+        nav.classList.toggle('search-open', opening);
+        globalSearchToggle.setAttribute('aria-expanded', String(opening));
+        if (opening) setTimeout(() => globalSearchInput?.focus(), 80);
+        else if (globalSearchSuggestions) globalSearchSuggestions.style.display = 'none';
+    });
+    globalSearchSubmit?.addEventListener('click', submitGlobalSearch);
+    globalSearchInput?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); submitGlobalSearch(); }
+        if (e.key === 'Escape') {
+            $('main-nav').classList.remove('search-open');
+            globalSearchToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+    globalSearchInput?.addEventListener('input', () => {
+        const q = globalSearchInput.value.trim();
+        clearTimeout(globalSearchTimer);
+        if (q.length < 2) { globalSearchSuggestions.style.display = 'none'; return; }
+        globalSearchTimer = setTimeout(() => {
+            const onTV = tvSection.classList.contains('active');
+            const section = onTV ? 'tv' : 'movie';
+            const type = onTV ? 'tv' : 'movie';
+            fetchSuggestions(q, type, section, globalSearchInput, globalSearchSuggestions);
+        }, 300);
     });
     // Recommended For You row: let mouse-wheel scroll move the row
     // horizontally (like other streaming sites) instead of just scrolling
