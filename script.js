@@ -690,6 +690,30 @@ function setupListeners() {
 
     // Search
     setupSearch(movieSearch, movieSearchBtn, movieSuggEl, movieSearchType, 'movie');
+    const globalSearchToggle = $('global-search-toggle');
+    const globalSearchInput = $('global-search-input');
+    const globalSearchSubmit = $('global-search-submit');
+    const runGlobalSearch = () => {
+        const onTV = tvSection.classList.contains('active');
+        const target = onTV ? tvSearch : movieSearch;
+        const typeSelect = onTV ? tvSearchType : movieSearchType;
+        const searchButton = onTV ? tvSearchBtn : movieSearchBtn;
+        if (!globalSearchInput.value.trim()) return;
+        typeSelect.value = onTV ? 'tv' : 'movie';
+        target.value = globalSearchInput.value.trim();
+        searchButton.click();
+        $('main-nav').classList.remove('search-open');
+    };
+    globalSearchToggle?.addEventListener('click', () => {
+        const nav = $('main-nav');
+        nav.classList.toggle('search-open');
+        if (nav.classList.contains('search-open')) globalSearchInput.focus();
+    });
+    globalSearchSubmit?.addEventListener('click', runGlobalSearch);
+    globalSearchInput?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') runGlobalSearch();
+        if (e.key === 'Escape') $('main-nav').classList.remove('search-open');
+    });
     setupSearch(tvSearch, tvSearchBtn, tvSuggEl, tvSearchType, 'tv');
 
     // Filters
