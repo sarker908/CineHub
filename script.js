@@ -576,6 +576,19 @@ function populateYears() {
 
 // ── EVENT LISTENERS ───────────────────────────────────
 function setupListeners() {
+    // Wire search controls first. Other page listeners below may depend on
+    // optional sections; a missing unrelated element must not disable search.
+    setupSearch(movieSearch, movieSearchBtn, movieSuggEl, movieSearchType, 'movie');
+    setupSearch(tvSearch, tvSearchBtn, tvSuggEl, tvSearchType, 'tv');
+
+    const globalSearchToggle = $('global-search-toggle');
+    globalSearchToggle?.addEventListener('click', () => {
+        const onTV = tvSection.classList.contains('active');
+        const target = onTV ? tvSearch : movieSearch;
+        const filters = target.closest('.filters-bar');
+        if (filters) filters.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => target.focus(), 250);
+    });
     // Recommended For You row: let mouse-wheel scroll move the row
     // horizontally (like other streaming sites) instead of just scrolling
     // the page vertically while the cursor happens to be over it. Only
@@ -687,18 +700,6 @@ function setupListeners() {
             fetchTVShows(currentTvEndpoint);
         });
     });
-
-    // Search
-    setupSearch(movieSearch, movieSearchBtn, movieSuggEl, movieSearchType, 'movie');
-    const globalSearchToggle = $('global-search-toggle');
-    globalSearchToggle?.addEventListener('click', () => {
-        const onTV = tvSection.classList.contains('active');
-        const target = onTV ? tvSearch : movieSearch;
-        const filters = target.closest('.filters-bar');
-        if (filters) filters.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        setTimeout(() => target.focus(), 250);
-    });
-    setupSearch(tvSearch, tvSearchBtn, tvSuggEl, tvSearchType, 'tv');
 
     // Filters
     $('movie-apply-filters').addEventListener('click', applyMovieFilters);
