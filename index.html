@@ -27,27 +27,18 @@
                 <div class="logo-pulse"></div>
             </div>
             <div class="nav-links">
-                <button class="nav-btn active" data-section="movies">
-                    <i class="fas fa-film"></i>
-                    <span>Movies</span>
-                </button>
-                <button class="nav-btn" data-section="tvshows">
-                    <i class="fas fa-tv"></i>
-                    <span>TV Shows</span>
-                </button>
-                <button class="nav-btn" id="watchlist-nav-btn">
-                    <i class="fas fa-bookmark"></i>
-                    <span>Watchlist</span>
-                    <span class="nav-badge" id="watchlist-badge" style="display:none">0</span>
-                </button>
-                <button class="nav-btn" id="continue-nav-btn">
-                    <i class="fas fa-play-circle"></i>
-                    <span>Continue</span>
-                </button>
-                <button class="nav-btn" id="stats-nav-btn">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Stats</span>
-                </button>
+                <button class="nav-btn active" data-section="movies"><span>Home</span></button>
+                <button class="nav-btn" data-section="tvshows"><span>TV Shows</span></button>
+                <button class="nav-btn" id="watchlist-nav-btn"><span>My List</span><span class="nav-badge" id="watchlist-badge" style="display:none">0</span></button>
+                <button class="nav-btn" id="continue-nav-btn"><span>Continue Watching</span></button>
+                <button class="nav-btn" id="stats-nav-btn"><span>My Stats</span></button>
+            </div>
+            <div class="nav-search">
+                <div class="global-search-box" id="global-search-box">
+                    <input id="global-search-input" type="search" placeholder="Titles, people, genres" autocomplete="off" aria-label="Search CineHub">
+                    <button id="global-search-submit" aria-label="Submit search"><i class="fas fa-arrow-right"></i></button>
+                </div>
+                <button class="global-search-toggle" id="global-search-toggle" aria-label="Open search"><i class="fas fa-search"></i></button>
             </div>
             <button class="mobile-menu-btn" id="mobile-menu-btn">
                 <span></span><span></span><span></span>
@@ -89,6 +80,21 @@
             <div class="scroll-line"></div>
         </div>
     </header>
+
+    <section class="ott-strip" aria-label="Streaming platforms">
+        <div class="ott-strip-inner">
+            <span class="ott-strip-label">DISCOVER FROM</span>
+            <div class="ott-logos">
+                <span class="ott-logo netflix"><img src="https://cdn.simpleicons.org/netflix/E50914" alt="">NETFLIX</span>
+                <span class="ott-logo prime"><img src="https://cdn.simpleicons.org/primevideo/FFFFFF" alt="">prime video</span>
+                <span class="ott-logo disney"><img src="https://cdn.simpleicons.org/disneyplus/FFFFFF" alt="">Disney+</span>
+                <span class="ott-logo max"><img src="https://cdn.simpleicons.org/hbo/FFFFFF" alt="">max</span>
+                <span class="ott-logo apple"><img src="https://cdn.simpleicons.org/appletv/FFFFFF" alt="">Apple TV+</span>
+                <span class="ott-logo hulu"><img src="https://cdn.simpleicons.org/hulu/1CE783" alt="">hulu</span>
+                <span class="ott-logo crunchy"><img src="https://cdn.simpleicons.org/crunchyroll/F47521" alt="">crunchyroll</span>
+            </div>
+        </div>
+    </section>
 
     <!-- Adblocker Notice -->
     <div class="adblock-notice" id="adblock-notice">
