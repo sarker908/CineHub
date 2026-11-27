@@ -34,7 +34,12 @@
                 <button class="nav-btn" id="stats-nav-btn"><span>My Stats</span></button>
             </div>
             <div class="nav-search">
-                <button class="global-search-toggle" id="global-search-toggle" aria-label="Open search"><i class="fas fa-search"></i></button>
+                <button class="global-search-toggle" id="global-search-toggle" aria-label="Open search" aria-expanded="false"><i class="fas fa-search"></i></button>
+                <div class="global-search-box" id="global-search-box">
+                    <input type="search" id="global-search-input" placeholder="Search movies, shows, actors..." autocomplete="off" aria-label="Search movies, shows, actors">
+                    <button type="button" id="global-search-submit" aria-label="Submit search"><i class="fas fa-arrow-right"></i></button>
+                    <div class="global-search-suggestions" id="global-search-suggestions"></div>
+                </div>
             </div>
             <button class="mobile-menu-btn" id="mobile-menu-btn">
                 <span></span><span></span><span></span>
